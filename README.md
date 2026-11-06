@@ -110,7 +110,7 @@ Two hand-written test sets: 22 easy questions and 20 harder ones, including vagu
 
 - **Small eval sets.** With 20-22 questions, one question moves a score by about 5 points, so differences between experiments are suggestive, not conclusive. The answer-hit metric is a keyword check and can pass by accident.
 - **Hybrid search regressed one question.** The "hosted by / Argentina / 2022" question found the right page under C but not under D.
-- **Generation not yet verified end to end.** The LLM step is implemented, but Gemini returned 503 errors on every attempt during development, so full answers haven't been tested yet.
+- **Generation not yet verified end to end.** LLM availability. Gemini returned intermittent 503 “high demand” errors during development, so generation retries, falls back to a second model, and finally to a local Ollama model.
 - **Narrow data.** 16 Wikipedia pages only.
 
 ## Roadmap
