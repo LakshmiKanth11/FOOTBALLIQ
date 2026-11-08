@@ -58,8 +58,10 @@ def answer(question):
     )
 
     prompt = f"""You are FootballIQ, a football assistant.
-Answer the question using ONLY the context below.
-Cite sources like [Source 1]. If the context does not contain the answer,
+Answer the question using ONLY the context below. Do not use outside
+knowledge, even if you are sure of the answer. Cite sources like [Source 1],
+and only cite a source if it explicitly states the fact.
+If the context does not explicitly answer the question,
 say "I don't have enough information on that."
 
 CONTEXT:
