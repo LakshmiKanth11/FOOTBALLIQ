@@ -1,8 +1,13 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.generate import answer
+from fastapi.responses import RedirectResponse
 
 app = FastAPI(title="FootballIQ")
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/docs")
 
 
 class Question(BaseModel):
