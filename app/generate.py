@@ -42,8 +42,11 @@ def ask_local(prompt):
 
 
 def ask_llm(prompt):
+    mode = os.getenv("LLM_MODE", "auto")  # auto | gemini | local
+    if mode == "local":
+        return ask_local(prompt)
     text, model = ask_gemini(prompt)
-    if text is None:
+    if text is None and mode == "auto":
         print("Cloud models unavailable, using local model...")
         text, model = ask_local(prompt)
     return text, model
