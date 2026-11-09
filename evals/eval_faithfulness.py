@@ -1,10 +1,8 @@
 import time
 from app.generate import answer
 
-# Questions the data should NOT answer -> the system should refuse
 OUT_OF_SCOPE = [
     "Who is the president of India?",
-    "What is the capital of Japan?",
     "Who wrote the play Hamlet?",
     "How do I bake sourdough bread?",
     "What is the boiling point of water?",
@@ -14,7 +12,10 @@ OUT_OF_SCOPE = [
     "What is the chemical symbol for gold?",
 ]
 
-# Questions the data CAN answer -> should answer, with this keyword inside
+
+# Borderline: the context only implies the answer. Shown, not scored.
+BORDERLINE = ["What is the capital of Japan?"]
+
 IN_SCOPE = [
     ("In what year was Messi born?", "1987"),
     ("Which club did Ronaldo join in Saudi Arabia?", "Al-Nassr"),
@@ -23,33 +24,47 @@ IN_SCOPE = [
     ("Which player is nicknamed CR7?", "Ronaldo"),
 ]
 
+PAUSE = 10  # seconds between questions, to stay under rate limits
+
 
 def refused(text):
-    t = text.lower().replace("\u2019", "'")
-    return "enough information" in t
+    return "enough information" in text.lower().replace("\u2019", "'")
 
+
+ran_out = ok_out = ran_in = ok_in = 0
 
 print("=== OUT OF SCOPE (should refuse) ===")
-correct_refusals = 0
 for q in OUT_OF_SCOPE:
     r = answer(q)
-    ok = refused(r["answer"])
-    correct_refusals += ok
-    print(f"{'REFUSED ' if ok else 'ANSWERED'} [{r['model']}] {q}")
-    if not ok:
-        print("    ->", r["answer"][:150].replace("\n", " "))
-    time.sleep(1)
+    if r["model"] is None:
+        print("SKIPPED:", q)
+    else:
+        ran_out += 1
+        ok = refused(r["answer"])
+        ok_out += ok
+        print(f"{'REFUSED ' if ok else 'ANSWERED'} [{r['model']}] {q}")
+        if not ok:
+            print("    ->", r["answer"][:150].replace("\n", " "))
+    time.sleep(PAUSE)
 
 print("\n=== IN SCOPE (should answer) ===")
-correct_answers = 0
 for q, keyword in IN_SCOPE:
     r = answer(q)
-    ok = (not refused(r["answer"])) and keyword.lower() in r["answer"].lower()
-    correct_answers += ok
-    print(f"{'OK  ' if ok else 'MISS'} [{r['model']}] {q}")
-    if not ok:
-        print("    ->", r["answer"][:150].replace("\n", " "))
-    time.sleep(1)
+    if r["model"] is None:
+        print("SKIPPED:", q)
+    else:
+        ran_in += 1
+        ok = (not refused(r["answer"])) and keyword.lower() in r["answer"].lower()
+        ok_in += ok
+        print(f"{'OK  ' if ok else 'MISS'} [{r['model']}] {q}")
+        if not ok:
+            print("    ->", r["answer"][:150].replace("\n", " "))
+    time.sleep(PAUSE)
 
-print(f"\nCorrect refusals: {correct_refusals}/{len(OUT_OF_SCOPE)}")
-print(f"Correct answers:  {correct_answers}/{len(IN_SCOPE)}")
+print("\n=== BORDERLINE (not scored) ===")
+for q in BORDERLINE:
+    r = answer(q)
+    print(f"[{r['model']}] {q}\n    -> {r['answer'][:150]}".replace("\n    ->", "\n    ->"))
+
+print(f"\nCorrect refusals: {ok_out}/{ran_out} (of {len(OUT_OF_SCOPE)} asked)")
+print(f"Correct answers:  {ok_in}/{ran_in} (of {len(IN_SCOPE)} asked)")

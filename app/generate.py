@@ -23,7 +23,7 @@ def ask_gemini(prompt):
                 return response.text, model
             except (errors.ServerError, errors.ClientError) as e:
                 print(f"{model} failed ({getattr(e, 'code', 'error')}), trying again...")
-                time.sleep(2)
+                time.sleep(15 if getattr(e, "code", None) == 429 else 2)
     return None, None
 
 
