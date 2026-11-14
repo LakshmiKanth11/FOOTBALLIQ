@@ -8,6 +8,103 @@ A football Q&A assistant built with retrieval-augmented generation (RAG). It ans
 DOWNLOAD THIS DEMO PAGE  AND VIEW IT IN WEB BROWSERS.
 (screenshots and results; the app itself runs locally)
 
+## HOW TO RUN IT FROM STARTING IF YOU DOWNLOAD THE REPO DIRECTLY 
+## Quick start (for anyone downloading this repo)
+
+**You need:** Python 3.10 or newer, an internet connection, and a free Gemini API key from [aistudio.google.com](https://aistudio.google.com). The first run downloads about 400 MB of models.
+
+> **Important: keep the virtual environment (`.venv`) active.**
+> Every command from Step 2 onward must be run with `(.venv)` showing at the start of your terminal line. **Every time you open a new terminal, activate it again** (Step 2). If you skip this, you'll get `No module named ...` errors.
+
+### 1. Get the code (no `.venv` needed)
+
+```bash
+git clone https://github.com/LakshmiKanth11/FOOTBALLIQ.git
+cd FOOTBALLIQ
+```
+
+Or click **Code → Download ZIP** on GitHub, unzip it, and open a terminal inside the folder.
+
+### 2. Create and activate the virtual environment
+
+Create it **once**:
+
+```bash
+python -m venv .venv
+```
+
+Activate it **every time you open a new terminal**:
+
+- Windows: `.venv\Scripts\activate`
+- Mac/Linux: `source .venv/bin/activate`
+
+Check that your terminal line now starts with `(.venv)`.
+
+### 3. Install the libraries (`.venv` must be active)
+
+```bash
+pip install -r requirements.txt
+```
+
+If this fails, install without pinned versions:
+
+```bash
+pip install chromadb sentence-transformers rank-bm25 google-genai python-dotenv wikipedia-api fastapi uvicorn gradio
+```
+
+### 4. Add your settings (no `.venv` needed)
+
+1. Create a file named `.env` in the project folder with one line, with no spaces around `=` and no quotes:
+   ```
+   GOOGLE_API_KEY=your_key_here
+   ```
+2. Open `app/ingest.py` and replace `your_email@example.com` in the `user_agent` line with your own email.
+
+### 5. Build the knowledge base, once (`.venv` must be active)
+
+```bash
+python app/ingest.py
+python app/embed.py
+```
+
+Wait for `Done! Database now holds ... chunks`.
+
+### 6. Run it (`.venv` must be active)
+
+Chat window:
+
+```bash
+python chat_ui.py
+```
+
+Open http://127.0.0.1:7860 (not `0.0.0.0`).
+
+Or the API:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+Open http://127.0.0.1:8000/docs and use `POST /ask`.
+
+Evals (also with `.venv` active, run from the project folder):
+
+```bash
+python -m evals.eval_big
+```
+
+### Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| `No module named 'google'` (or any library) | `.venv` isn't active. Run the activate command from Step 2 and check for `(.venv)`. |
+| `No module named 'app'` | Run files from the project folder with `python -m ...`, not a play button. |
+| `503` or `429` from Gemini | Google is busy or rate-limited. Wait a few minutes. The app retries and tries a second model. |
+| "No AI model is available right now" | Gemini is unavailable and no local model is installed. Retry later, or install [Ollama](https://ollama.com) and run `ollama pull llama3.2`. |
+| Dimension error such as "expecting 768, got 384" | `embed.py` and `retrieve.py` use different embedding models. Make them match and re-run `python app/embed.py`. |
+| PowerShell says scripts are disabled when activating | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, type `Y`, then activate again. |
+| Browser error at `0.0.0.0` | Use `127.0.0.1` instead. |
+
 ## How it works
 
 ```
