@@ -2,7 +2,7 @@
 
 A football Q&A assistant built with retrieval-augmented generation (RAG). It answers from 16 Wikipedia pages, cites its sources, and says so when the pages don't cover a question. The focus of the project is **measuring retrieval quality** and improving it one change at a time.
 
-![FootballIQ chat window](https://huggingface.co/spaces/MIKEYYYYYYYYYY/footballiq/blob/main/footballiq-demo/screenshots/chat.png)
+![FootballIQ chat window](https://github.com/LakshmiKanth11/FOOTBALLIQ/blob/main/chat.png)
 
 **Demo page:** [DEMO_LINK](https://huggingface.co/spaces/MIKEYYYYYYYYYY/footballiq/tree/main/footballiq-demo) (screenshots and results; the app itself runs locally)
 
