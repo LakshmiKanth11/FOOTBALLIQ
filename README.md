@@ -4,7 +4,7 @@ A football Q&A assistant built with retrieval-augmented generation (RAG). It ans
 
 ![FootballIQ chat window](https://huggingface.co/spaces/MIKEYYYYYYYYYY/footballiq/tree/main/footballiq-demo)
 
-**Demo page:** [YOUR_DEMO_LINK](https://huggingface.co/spaces/MIKEYYYYYYYYYY/footballiq/tree/main/footballiq-demo) (screenshots and results; the app itself runs locally)
+**Demo page:** [DEMO_LINK](https://huggingface.co/spaces/MIKEYYYYYYYYYY/footballiq/tree/main/footballiq-demo) (screenshots and results; the app itself runs locally)
 
 ## How it works
 
